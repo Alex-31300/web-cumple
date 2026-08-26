@@ -25,7 +25,6 @@
     --gold:#e0a233;
     --thread:#c45b6a;
   }
-  
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   html,body{ overscroll-behavior:none; }
@@ -378,6 +377,13 @@
     box-shadow: 0 4px 10px rgba(156,106,222,0.3);
   }
   .win-card h3 { font-family: 'Caveat', cursive; font-size: 36px; color: var(--rose); margin: 6px 0 10px; }
+  .win-card p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
 
   /* PASTEL */
   .cake-stage{ display:flex; flex-direction:column; align-items:center; gap:22px; padding:20px 0 40px; }
@@ -388,6 +394,31 @@
   .cake-msg{ font-family:'Caveat',cursive; font-size:28px; color:var(--rose); opacity:0; transition:opacity 0.6s; text-align:center; }
   .cake-msg.show{ opacity:1; }
   .confetti{ position:fixed; top:-10px; width:8px; height:14px; z-index:50; pointer-events:none; border-radius:1px; }
+
+  /* JARDÍN DE FLORES FINAL */
+  .garden-container {
+    position: fixed;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    pointer-events: none;
+    z-index: 100;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    overflow: visible;
+  }
+  .garden-flower {
+    opacity: 0;
+    transform: translateY(80px) scale(0.2) rotate(0deg);
+    transition: opacity 0.8s, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+  }
+  .garden-flower.bloom {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(var(--rot));
+  }
 
   footer{ text-align:center; padding:70px 20px 40px; }
   footer .stitch{ width:120px; height:1px; margin:0 auto 26px; background:repeating-linear-gradient(90deg, var(--thread) 0 8px, transparent 8px 14px); }
@@ -404,9 +435,9 @@
       <div class="tape mustard"></div>
       <div class="tape rose corner-l"></div>
       <div class="tape turquoise corner-r"></div>
-      <div class="eyebrow">26 de agosto · un día para celebrar</div>
+      <div class="eyebrow">25 de agosto · un día para celebrar</div>
       <h1 class="title">Feliz cumpleaños,<br>Evelyn</h1>
-      <p class="subtitle">21 años, hechos <b>a mano</b> y con cariño.</p>
+      <p class="subtitle">21 años, hechos <b>a mano</b>, con cariño y mucha voluntad.</p>
     </div>
     <div class="scroll-hint">↓ desliza para ver tu regalito ↓</div>
   </div>
@@ -425,8 +456,7 @@
         <div class="letter-paper">
           <p>Querida Evelyn,</p>
           <p>Sé que para ti lo que más vale no se compra: son las horas puestas en algo, el detalle pensado, la voluntad de hacerlo con las propias manos. Por eso quise que tu regalo, aunque sea una página y no un papel, se sintiera igual de sencillo y cuidado.</p>
-          <p>Hoy cumples 21 años, y quiero que sepas que las personas como tú —que valoran el tiempo, el aprecio y lo hecho con intención— son las que hacen que el mundo se sienta un poco más cálido.</p>
-          <p>Que nunca te falten ganas de soñar en grande, disfrutar de las pequeñas cosas, crear con el corazón y seguir contagiando a todos con tu buena energía.</p>
+          <p>Que este año siga lleno de proyectos bonitos por crear con el corazón, ganas de soñar en grande, recuerdos inolvidables y esa chispa tan especial con la que contagias a todos.</p>
           <p>Gracias por cada momento compartido y por las risas que hacen que todo valga la pena.</p>
           <p class="sign">Con cariño. 🌿</p>
         </div>
@@ -438,7 +468,7 @@
   <section id="photos">
     <div class="section-head">
       <div class="eyebrow c-turquoise">Un recuerdo en cada foto</div>
-      <h2>Momentos Especiales<span class="underline" style="background:var(--turquoise);"></span></h2>
+      <h2>Nuestros Momentos<span class="underline" style="background:var(--turquoise);"></span></h2>
     </div>
     <p class="photo-instruction">Toca una foto para ver la siguiente ✨</p>
     
@@ -477,8 +507,8 @@
         <div class="game-overlay hidden" id="winOverlay">
           <div class="win-card">
             <span>🎉✨🌸</span>
-            <h3>¡BUENAAAAAA, Evelyn!</h3>
-            <p>¡Atrapaste todos los deseos! Que este nuevo año de vida te devuelva multiplicada la alegría y la calidez que siempre le regalas a quienes te rodean.</p>
+            <h3>¡Felicidades, Evelyn!</h3>
+            <p>¡Atrapaste todos los deseos! Que este nuevo año de vida te devuelva multiplicada toda la luz, la alegría y la calidez que siempre le regalas a quienes te rodean.</p>
             <button class="game-btn" id="restartBtn">Jugar otra vez 🔄</button>
           </div>
         </div>
@@ -525,11 +555,13 @@
 </div>
 
 <script>
+  // Lógica de la Carta
   document.getElementById('envelope').addEventListener('click', function(e){
     if (e.target.closest('.letter-paper')) return; 
     this.classList.toggle('open');
   });
 
+  // Lógica de las Fotos
   const stack = document.getElementById('photoStack');
   if (stack) {
     stack.addEventListener('click', function() {
@@ -546,6 +578,7 @@
     });
   }
 
+  // Lógica del Juego
   (function(){
     const gameArea = document.getElementById('gameArea');
     const startOverlay = document.getElementById('startOverlay');
@@ -601,15 +634,52 @@
     restartBtn.addEventListener('click', startGame);
   })();
 
+  // Lógica del Pastel, Velitas y Jardín de Flores
   let blown = false;
   document.getElementById('cakeSvg').addEventListener('click', function(){
     if(blown) return;
     blown = true;
+    
+    // Apagar velas y mostrar mensaje
     document.querySelectorAll('.flame').forEach(f => f.classList.add('out'));
     document.getElementById('cakeMsg').classList.add('show');
+    
+    // Lanzar animaciones
     launchConfetti();
+    growGarden();
   });
 
+  // Función para hacer crecer el jardín de rosas y flores
+  function growGarden() {
+    const garden = document.createElement('div');
+    garden.className = 'garden-container';
+    document.body.appendChild(garden);
+
+    const floralEmojis = ['🌹', '🌸', '🌹', '🌿', '🌷', '🌹', '🌺', '🌿'];
+    const numFlowers = Math.floor(window.innerWidth / 35); 
+
+    for (let i = 0; i < numFlowers; i++) {
+      const f = document.createElement('div');
+      f.className = 'garden-flower';
+      f.textContent = floralEmojis[Math.floor(Math.random() * floralEmojis.length)];
+      
+      const size = 35 + Math.random() * 25; 
+      f.style.fontSize = size + 'px';
+      
+      const rot = (Math.random() - 0.5) * 50; 
+      f.style.setProperty('--rot', rot + 'deg');
+      
+      f.style.transitionDelay = (Math.random() * 0.6) + 's';
+      
+      garden.appendChild(f);
+      
+      setTimeout(() => {
+        f.classList.add('bloom');
+      }, 50);
+    }
+  }
+
+  // Función del confeti
   function launchConfetti(){
     const colors = ['#f0637a','#2bb3a3','#f0b429','#9c6ade','#4fd3a1','#4fa3d1'];
     for(let i=0;i<60;i++){
